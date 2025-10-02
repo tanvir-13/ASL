@@ -39,6 +39,12 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -369,116 +375,112 @@
         </div>
     </footer>
 
-    /*
-    <script>
-        // --- Mobile Menu Toggle ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        // --- Close mobile menu when a link is clicked ---
-        const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
+    
 
-        // --- Smooth scrolling for navigation links ---
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId.length > 1) {
-                    document.querySelector(targetId).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+<script>
+    // --- Mobile Menu Toggle ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
 
-        // --- Add shadow to header on scroll ---
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('shadow-lg', 'shadow-blue-500/10');
+    // --- Close mobile menu when a link is clicked ---
+    const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+    });
+
+    // --- Smooth scrolling for navigation links ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId.length > 1) {
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // --- FAQ Accordion Logic ---
+    document.querySelectorAll('.faq-question').forEach(button => {
+        button.addEventListener('click', () => {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon');
+
+            // Toggle visibility of the answer
+            answer.classList.toggle('hidden');
+            
+            // Animate the answer panel (optional but nice)
+            if (!answer.classList.contains('hidden')) {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                answer.style.paddingTop = '0';
+                answer.style.paddingBottom = '1.5rem'; // Corresponds to p-6
             } else {
-                header.classList.remove('shadow-lg', 'shadow-blue-500/10');
+                answer.style.maxHeight = null;
+                 answer.style.paddingTop = '0';
+                answer.style.paddingBottom = '0';
             }
+
+
+            // Rotate the icon
+            icon.classList.toggle('rotate-180');
         });
-
-        // --- FAQ Accordion ---
-        const faqItems = document.querySelectorAll('.faq-item');
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            const answer = item.querySelector('.faq-answer');
-            const icon = item.querySelector('.faq-icon');
-
-            question.addEventListener('click', () => {
-                const isVisible = !answer.classList.contains('hidden');
-                answer.classList.toggle('hidden');
-                icon.classList.toggle('rotate-180', !isVisible);
-            });
-        });
-
-        // --- Contact Form to Email ---
-        const submitButton = document.getElementById('submit-button');
-        submitButton.addEventListener('click', () => {
-            const name = document.getElementById('form-name').value;
-            const email = document.getElementById('form-email').value;
-            const company = document.getElementById('form-company').value;
-            const service = document.getElementById('form-service').value;
-            const message = document.getElementById('form-message').value;
-
-            if (!name || !email || !message) {
-                // Replaced alert with a more modern notification if possible, but alert is fine for now.
-                alert('Please fill in Your Name, Email, and Message fields.');
-                return;
-            }
-
-            const recipientEmail = 'ambiya.soft.limited@gmail.com';
-            let emailSubject = `Project Inquiry from ${name}`;
-            if (company) {
-                emailSubject += ` (${company})`;
-            }
-
-            let emailBody = `Hello AmBiya Soft Limited,\n\nYou have a new project inquiry from your website.\n\n---\n`;
-            emailBody += `Name: ${name}\n`;
-            emailBody += `Email: ${email}\n`;
-             if (company) {
-                emailBody += `Company: ${company}\n`;
-            }
-            if (service !== 'Select a Service of Interest') {
-                emailBody += `Service of Interest: ${service}\n`;
-            }
-            emailBody += `---\n\nMessage:\n${message}`;
-
-            const encodedSubject = encodeURIComponent(emailSubject);
-            const encodedBody = encodeURIComponent(emailBody);
-            
-            const mailtoUrl = `mailto:${recipientEmail}?subject=${encodedSubject}&body=${encodedBody}`;
-            
-            window.location.href = mailtoUrl;
-        });
-
-        // --- Reveal elements on scroll ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
-
-        const elementsToReveal = document.querySelectorAll('.reveal');
-        elementsToReveal.forEach(el => observer.observe(el));
-
-    </script>
-
+    });
+    
+    // To make the FAQ transition smooth, add this to your <style> tag in the <head>
+    /*
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
     */
+
+
+    // --- Reveal elements on scroll ---
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optional: stop observing once it's visible
+                // revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        revealObserver.observe(el);
+    });
+    
+    // --- Dynamic Copyright Year ---
+    const currentYear = new Date().getFullYear();
+    document.querySelector('footer p:nth-of-type(1)').innerHTML = `&copy; ${currentYear} AmBiya Soft Limited. All Rights Reserved.`;
+
+
+    // --- Contact Form Placeholder ---
+    // Note: This only shows an alert. You need a backend service like Formspree, Netlify Forms, or your own server to make this send an email.
+    const submitButton = document.getElementById('submit-button');
+    submitButton.addEventListener('click', () => {
+        const name = document.getElementById('form-name').value;
+        const email = document.getElementById('form-email').value;
+        const message = document.getElementById('form-message').value;
+
+        if (name && email && message) {
+            // Here you would typically send the data to your backend
+            alert('Thank you for your message! \n(This is a demo. The form is not connected to a server yet.)');
+            document.getElementById('contact-form').reset(); // Clear the form
+        } else {
+            alert('Please fill out all required fields (Name, Email, Message).');
+        }
+    });
+
+</script>
 </body>
 </html>
